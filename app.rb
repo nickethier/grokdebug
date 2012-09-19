@@ -10,7 +10,7 @@ class Application < Sinatra::Base
       @grok = Grok.new
 
       Dir.foreach('./patterns/') do |item|
-        next if item == '.' or item == '..'
+        next if item == '.' or item == '..' or item == '.git'
         @grok.add_patterns_from_file("./patterns/#{item}")
       end
     end
