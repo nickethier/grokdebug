@@ -1,0 +1,3 @@
+[submodule "patterns"]
+	path = patterns
+	url = git://github.com/logstash/grok-patterns.git

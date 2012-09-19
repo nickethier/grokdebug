@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Grok Debugger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Grok Debugger</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Debugger</a></li>
+              <li><a href="/discover">Discover</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <form action="#" id='grok-form'>
+        <input type="text" class="span12" placeholder="Input" id='input'>
+        <input type="text" class="span12" placeholder="Pattern" id='pattern'>
+      </form>
+ 
+      <div class="well">
+        <pre id="grok"></pre>
+      </div>
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/js/bootstrap.min.js"></script>
+    <script>
+      var match = function() {
+        var input = $('#input').val();
+        var pattern = $('#pattern').val();
+        $.post('/grok', {"input":input,"pattern":pattern}, function(data){
+         $('#grok').html(data);
+        });
+      };
+      var oldPat = $("#pattern").val();
+      var oldIn = $("#input").val();
+      setInterval(function (){
+        pat = $("#pattern").val();
+        inp = $("#input").val();
+        if(inp == oldIn && pat == oldPat){
+          return;
+        } else {
+          oldPat = pat;
+          oldIn = inp;
+          match();
+        }
+      }, 1000);
+      $("#grok-form").submit(match);
+    </script>
+  </body>
+</html>
+
