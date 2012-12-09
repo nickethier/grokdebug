@@ -47,6 +47,10 @@
       <form action="#" id='grok-form'>
         <input type="text" class="span12" placeholder="Input" id='input'>
         <input type="text" class="span12" placeholder="Pattern" id='pattern'>
+        <label class="checkbox">
+          <input id="named_captures_only" type="checkbox" value="">
+          Named Captures Only
+        </label>
       </form>
  
       <div class="well">
@@ -63,7 +67,13 @@
       var match = function() {
         var input = $('#input').val();
         var pattern = $('#pattern').val();
-        $.post('/grok', {"input":input,"pattern":pattern}, function(data){
+        var named_captures_only = $('#named_captures_only').is(':checked');
+        $.post('/grok', 
+          {
+            "input":input,
+            "pattern":pattern,
+            "named_captures_only":named_captures_only
+          }, function(data){
          $('#grok').html(data);
         });
       };
@@ -80,6 +90,9 @@
           match();
         }
       }, 1000);
+      $("#named_captures_only").click(function(){
+        match();
+      })
       $("#grok-form").submit(match);
     </script>
   </body>

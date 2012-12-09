@@ -19,6 +19,7 @@ class Application < Sinatra::Base
   post '/grok' do
     input = params[:input]
     pattern = params[:pattern]
+    named_captures_only = (params[:named_captures_only] == "true")
 
     begin
       grok.compile(params[:pattern])
@@ -27,10 +28,53 @@ class Application < Sinatra::Base
     end
 
     match = grok.match(params[:input])
+    return "No Matches" if !match
 
-    if match
+    fields = {}
+    match.captures.each do |key, value|
+      type_coerce = nil
+      is_named = false
+      if key.include?(":")
+         name, key, type_coerce = key.split(":")
+         is_named = true
+      end
+
+      case type_coerce
+        when "int"
+          value = value.to_i
+        when "float"
+          value = value.to_f
+      end
+
+      if named_captures_only && !is_named
+        next
+      end
+
+      if fields[key].is_a?(String)
+        fields[key] = [fields[key]]
+      end
+
+      #if keep_empty_captures && fields[key].nil?
+      #  fields[key] = []
+      #end
+
+      # If value is not nil, or responds to empty and is not empty, add the
+      # value to the event.
+      if !value.nil? && (!value.empty? rescue true)
+        # Store fields as an array unless otherwise instructed with the
+        # 'singles' config option
+        if !fields.include?(key) and @singles
+          fields[key] = value
+        else
+          fields[key] ||= []
+          fields[key] << value
+        end
+      end
+    end
+
+    if fields
     #pp match.captures
-      return JSON.pretty_generate(match.captures)
+      return JSON.pretty_generate(fields)
     end
 
     return "No Matches"
