@@ -20,6 +20,8 @@ class Application < Sinatra::Base
     input = params[:input]
     pattern = params[:pattern]
     named_captures_only = (params[:named_captures_only] == "true")
+    singles = (params[:singles] == "true")
+    keep_empty_captures = (params[:keep_empty_captures] == "true")
 
     begin
       grok.compile(params[:pattern])
@@ -54,16 +56,16 @@ class Application < Sinatra::Base
         fields[key] = [fields[key]]
       end
 
-      #if keep_empty_captures && fields[key].nil?
-      #  fields[key] = []
-      #end
+      if keep_empty_captures && fields[key].nil?
+        fields[key] = []
+      end
 
       # If value is not nil, or responds to empty and is not empty, add the
       # value to the event.
       if !value.nil? && (!value.empty? rescue true)
         # Store fields as an array unless otherwise instructed with the
         # 'singles' config option
-        if !fields.include?(key) and @singles
+        if !fields.include?(key) and singles
           fields[key] = value
         else
           fields[key] ||= []
