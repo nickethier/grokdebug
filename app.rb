@@ -43,9 +43,9 @@ class Application < Sinatra::Base
 
       case type_coerce
         when "int"
-          value = value.to_i
+          value = value.to_i rescue nil
         when "float"
-          value = value.to_f
+          value = value.to_f rescue nil
       end
 
       if named_captures_only && !is_named
