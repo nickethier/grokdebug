@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'grok-pure'
 require 'json'
+require 'find'
 
 class Application < Sinatra::Base
   
@@ -10,11 +11,20 @@ class Application < Sinatra::Base
 
       Dir.foreach('./patterns/') do |item|
         next if item == '.' or item == '..' or item == '.git'
-        @grok.add_patterns_from_file("./patterns/#{item}")
+        @grok.add_patterns_from_file(("./patterns/#{item}"))
       end
     end
     @grok
   end
+
+  def get_files path
+     dir_array = Array.new
+      Find.find(path) do |f|
+           # dir_array << f if !File.directory?(f) # add only non-directories  
+            dir_array << File.basename(f, ".*")
+             end
+       return dir_array
+  end 
   post '/grok' do
     input = params[:input]
     pattern = params[:pattern]
@@ -91,5 +101,10 @@ class Application < Sinatra::Base
   
   get '/discover' do
     erb :'discover'
+  end
+
+  get '/patterns' do
+    @arr = get_files("./patterns/")
+    erb :'patterns'
   end
 end

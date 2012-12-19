@@ -1,1 +1,1 @@
-MONIT \[%{TZ:tz} %{SYSLOGTIMESTAMP:timestamp}\] %{WORD:state}%{SPACE}: %{GREEDYDATA:message}
+MONIT \[%{NOTSPACE:tz} %{SYSLOGTIMESTAMP:timestamp}\] %{WORD:state}%{SPACE}: %{GREEDYDATA:message}
