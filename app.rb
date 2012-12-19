@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'grok-pure'
 require 'json'
-require 'newrelic_rpm'
 
 class Application < Sinatra::Base
   

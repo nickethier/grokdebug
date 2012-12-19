@@ -5,7 +5,6 @@ GEM
     jls-grok (0.10.10)
       cabin (~> 0.5.0)
     json (1.7.5)
-    newrelic_rpm (3.5.3.25)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
@@ -21,5 +20,4 @@ PLATFORMS
 DEPENDENCIES
   jls-grok
   json
-  newrelic_rpm
   sinatra
