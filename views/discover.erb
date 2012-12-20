@@ -45,8 +45,9 @@
 
     <div class="container">
       <form action="#" class="form-inline" id='grok-form'>
-        <input type="text" class="span11" placeholder="Input" id='input'>
+        <input type="text" class="span12" placeholder="Input" id='input'>
         <button type="submit" class="btn btn-primary">Discover</button>
+        <button class="btn btn-danger" type="button" id=resetall>Reset</button>
       </form>
  
       <div class="well">
@@ -68,6 +69,10 @@
         return 1;
       };
       $("#grok-form").submit(match);
+      $("#resetall").click(function () {
+        $("input[type=text]").val("");
+        $("#grok").html("");
+      });
     </script>
   </body>
 </html>
