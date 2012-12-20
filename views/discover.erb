@@ -49,8 +49,8 @@
       <form action="#" class="form-horizontal" id='grok-form'>
         <textarea id="input" rows="5" action="#" class="span9"></textarea>
         <button type="submit" class="btn btn-primary">Discover</button>
-        <button class="btn btn-danger" type="button" id="resetall">Reset</button>
       </form>
+        <button class="btn btn-danger" type="button" id="resetall">Reset</button>
       </div>
       </div>
       <div class="well-large">
@@ -66,7 +66,7 @@
     <script>
       var match = function() {
         var input = $('#input').val();
-        $.post('/discover', {"input":input}, function(data){
+        $.post('/discover?#', {"input":input}, function(data){
          $('#grok').html(data);
         });
         return 1;
