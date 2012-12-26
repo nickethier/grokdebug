@@ -67,7 +67,7 @@
       var match = function() {
         var input = $('#input').val();
         $.post('/discover?#', {"input":input}, function(data){
-         $('#grok').html(data);
+         $('#grok').text(data);
         });
         return 1;
       };
