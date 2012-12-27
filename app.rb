@@ -9,9 +9,9 @@ class Application < Sinatra::Base
     if @grok.nil?
       @grok = Grok.new
 
-      Dir.foreach('./patterns/') do |item|
+      Dir.foreach('./public/patterns/') do |item|
         next if item == '.' or item == '..' or item == '.git'
-        @grok.add_patterns_from_file(("./patterns/#{item}"))
+        @grok.add_patterns_from_file(("./public/patterns/#{item}"))
       end
     end
     @grok
@@ -28,7 +28,7 @@ class Application < Sinatra::Base
       return dir_array
   end 
 
-  set :public_folder, File.dirname(__FILE__) + '/patterns'
+  set :public_folder, File.dirname(__FILE__) + '/public'
   post '/grok' do
     input = params[:input]
     pattern = params[:pattern]
@@ -108,7 +108,7 @@ class Application < Sinatra::Base
   end
 
   get '/patterns' do
-    @arr = get_files("./patterns/")
+    @arr = get_files("./public/patterns/")
     erb :'patterns'
   end
   get '/patterns/*' do
