@@ -18,13 +18,17 @@ class Application < Sinatra::Base
   end
 
   def get_files path
-     dir_array = Array.new
+    dir_array = Array.new
       Find.find(path) do |f|
-           # dir_array << f if !File.directory?(f) # add only non-directories  
-            dir_array << File.basename(f, ".*")
-             end
-       return dir_array
+        if !File.directory?(f)
+            #dir_array << f if !File.directory?.basename(f) # add only non-directories  
+          dir_array << File.basename(f, ".*")
+        end
+      end
+      return dir_array
   end 
+
+  set :public_folder, File.dirname(__FILE__) + '/patterns'
   post '/grok' do
     input = params[:input]
     pattern = params[:pattern]
@@ -106,5 +110,8 @@ class Application < Sinatra::Base
   get '/patterns' do
     @arr = get_files("./patterns/")
     erb :'patterns'
+  end
+  get '/patterns/*' do
+    send_file(params[:spat])
   end
 end
