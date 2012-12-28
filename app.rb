@@ -109,7 +109,7 @@ class Application < Sinatra::Base
 
   get '/patterns' do
     @arr = get_files("./public/patterns/")
-    erb :'patterns'
+    haml :'patterns'
   end
   get '/patterns/*' do
     send_file(params[:spat])
