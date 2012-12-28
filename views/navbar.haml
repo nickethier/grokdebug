@@ -8,12 +8,12 @@
 			%a.brand{:href => '/'} Grok Debugger
 			.nav-collapse
 				%ul.nav
-					%li
-						%a{:href => '#'}Debugger
-					%li
-						%a{:href => '/discover?#'}Discover
-					%li
-						%a{:href => '/patterns'}Patterns
-					%li
-						%a{:href => '/contact'}Contact
+					%li{:class => ('active' if request.path_info == '/')}
+						%a{:href => '/'}Debugger
+					%li{:class => ('active' if request.path_info == '/discover')}
+						%a{:href => '/discover'} Discover
+					%li{:class => ('active' if request.path_info == '/patterns')}
+						%a{:href => '/patterns'} Patterns
+					%li{:class => ('active' if request.path_info == '/contact')}
+						%a{:href => '/contact'} Contact
 				%p.navbar-text.pull-right
