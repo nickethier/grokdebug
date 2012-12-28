@@ -1,0 +1,19 @@
+.navbar.navbar-fixed-top.navbar-inverse
+	.navbar-inner
+		.container
+			%a.btn.btn-navbar{ "data-toggle".to_sym => "collapse", "data-target".to_sym => ".nav-collapse"}
+				%span.icon-bar
+				%span.icon-bar
+				%span.icon-bar
+			%a.brand{:href => '/'} Grok Debugger
+			.nav-collapse
+				%ul.nav
+					%li
+						%a{:href => '#'}Debugger
+					%li
+						%a{:href => '/discover?#'}Discover
+					%li
+						%a{:href => '/patterns'}Patterns
+					%li
+						%a{:href => '/contact'}Contact
+				%p.navbar-text.pull-right
