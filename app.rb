@@ -112,6 +112,6 @@ class Application < Sinatra::Base
     haml :'patterns'
   end
   get '/patterns/*' do
-    send_file(params[:spat])
+    send_file(params[:spat]) unless params[:spat].nil?
   end
 end
