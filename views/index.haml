@@ -2,4 +2,14 @@
 	%form{ :action => "#", :id => "grok-form" }
 		%input{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
 		%input{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "input" }
-
+		%lable{ :class => "checkbox inline",}
+			%input{ :id => "keep_empty_captures", :type => "checkbox", :value= => "" }
+				Keep Empty Captures
+		%label{ :class => "checkbox inline" }
+			%input{ :id => "named_captures_only", :type => "checkbox", :value => "" }
+				Named Captures Only
+		%label{ :class => "checkbox inline" }
+			%input{ :id => "singles", :type => "checkbox", :value => "" }
+				Singles
+	%div{ :class => "well" }
+		%pre{ :id => "grok" }
