@@ -104,7 +104,7 @@ class Application < Sinatra::Base
   end
   
   get '/discover' do
-    erb :'discover'
+    haml :'discover'
   end
 
   get '/patterns' do
