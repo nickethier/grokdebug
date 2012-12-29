@@ -1,20 +1,28 @@
 .container
-	%form{ :action => "#", :id => "grok-form" }
-		%input{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
-		%input{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "pattern" }
-		%lable{ :class => "checkbox inline",}
-			%input{ :id => "keep_empty_captures", :type => "checkbox", :value= => "" }
-				Keep Empty Captures
-		%label{ :class => "checkbox inline" }
-			%input{ :id => "named_captures_only", :type => "checkbox", :value => "" }
-				Named Captures Only
-		%label{ :class => "checkbox inline" }
-			%input{ :id => "singles", :type => "checkbox", :value => "" }
-				Singles
-	%div{ :class => "well" }
-		%pre{ :id => "grok" }
+	.content
+		.wrapper
+			.proper-content				
+				%form{ :action => "#", :id => "grok-form" }
+					%input{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
+					%input{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "pattern" }
+					%lable{ :class => "checkbox inline",}
+						%input{ :id => "keep_empty_captures", :type => "checkbox", :value= => "" }
+							Keep Empty Captures
+					%label{ :class => "checkbox inline" }
+						%input{ :id => "named_captures_only", :type => "checkbox", :value => "" }
+							Named Captures Only
+					%label{ :class => "checkbox inline" }
+						%input{ :id => "singles", :type => "checkbox", :value => "" }
+							Singles
+				%div{ :class => "well" }
+					%pre{ :id => "grok" }
+			.push
+		.footer-wrapper
+			%footer
+				%div=haml :footer
+
 %script{ :type => "text/javascript", :src =>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"}
-%script{ :type => "text/javascript", :src => "http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js" }
+%script{ :type => "text/javascript", :src => "http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js" }
 :javascript
 	var match = function() {
 		var input = $('#input').val();
