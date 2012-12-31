@@ -42,11 +42,11 @@ class Application < Sinatra::Base
       return "Compile ERROR"
     end
 
-    match = grok.match(params[:input])
-    return "No Matches" if !match
+    matches = grok.match(params[:input])
+    return "No Matches" if !matches
 
     fields = {}
-    match.captures.each do |key, value|
+    matches.captures.each do |key, value|
       type_coerce = nil
       is_named = false
       if key.include?(":")
