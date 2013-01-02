@@ -110,7 +110,7 @@ class Application < Sinatra::Base
     @tags = []
     grok.patterns.each do |x,y|
         @tags << "%{#{x}"
-      end
+    end
     haml :'index'
   end
   

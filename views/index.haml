@@ -67,7 +67,7 @@
 	$("#grok-form").submit(match);
 	$(document).ready(function () {
 		var tags = #{@tags};
-		$('#pattern').asuggest(tags, {
+		$('#pattern').asuggest(tags.sort(), {
 			'delimiters': '}',
 			'stopSuggestionKeys': [$.asuggestKeys.RETURN,39] // Last is right arrow
 		}); 
