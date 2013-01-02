@@ -28,8 +28,15 @@ class Application < Sinatra::Base
       return dir_array
   end 
 
+  helpers do
+    def js_array(name, array)   
+
+    end
+  end
+
   set :public_folder, File.dirname(__FILE__) + '/public'
   post '/grok' do
+
     input = params[:input]
     pattern = params[:pattern]
     named_captures_only = (params[:named_captures_only] == "true")
@@ -100,6 +107,10 @@ class Application < Sinatra::Base
   end
   
   get '/' do
+    @tags = []
+    grok.patterns.each do |x,y|
+        @tags << "%{#{x}"
+      end
     haml :'index'
   end
   
