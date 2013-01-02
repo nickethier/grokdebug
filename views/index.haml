@@ -43,10 +43,10 @@
 			$('#grok').html(data);
 		});
 	};
-	var oldPat = $("#pattern").val();
+	var oldPat = $("#tags").val();
 	var oldIn = $("#input").val();
 	setInterval(function (){
-		pat = $("#pattern").val();
+		pat = $("#tags").val();
 		inp = $("#input").val();
 		if(inp == oldIn && pat == oldPat){
 			return;
