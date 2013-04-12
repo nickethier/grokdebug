@@ -1,0 +1,109 @@
+.container
+	.content
+		.wrapper
+			.proper-content				
+				%form{ :action => "#", :id => "grok-form" }
+					%input{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
+					.ui-widget
+						%input{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "tags" }
+					%lable{ :class => "checkbox inline",}
+						%input{ :id => "keep_empty_captures", :type => "checkbox", :value= => "" }
+							Keep Empty Captures
+					%label{ :class => "checkbox inline" }
+						%input{ :id => "named_captures_only", :type => "checkbox", :value => "" }
+							Named Captures Only
+					%label{ :class => "checkbox inline" }
+						%input{ :id => "singles", :type => "checkbox", :value => "" }
+							Singles
+				%div{ :class => "well" }
+					%pre{ :id => "grok" }
+			.push
+		.footer-wrapper
+			%footer
+				%div=haml :footer
+
+%script{ :type => "text/javascript", :src =>"https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"}
+%script{ :type => "text/javascript", :src => "http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js" }
+%script{ :type => "text/javascript", :src => "https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" }
+:javascript
+	var match = function() {
+		var input = $('#input').val();
+		var pattern = $('#tags').val();
+		var named_captures_only = $('#named_captures_only').is(':checked');
+		var keep_empty_captures = $('#keep_empty_captures').is(':checked');
+		var singles = $('#singles').is(':checked');
+		$.post('/grok',
+			{
+				"input":input,
+				"pattern":pattern,
+				"named_captures_only":named_captures_only,
+				"keep_empty_captures":keep_empty_captures,
+				"singles":singles
+			}, function(data){
+			$('#grok').html(data);
+		});
+	};
+	var oldPat = $("#tags").val();
+	var oldIn = $("#input").val();
+	setInterval(function (){
+		pat = $("#tags").val();
+		inp = $("#input").val();
+		if(inp == oldIn && pat == oldPat){
+			return;
+		} else {
+			oldPat = pat;
+			oldIn = inp;
+			match();
+		}
+	}, 1000);
+	$("#named_captures_only").click(function(){
+		 match();
+	})
+	$("#keep_empty_captures").click(function(){
+			match();
+	})
+	$("#singles").click(function(){
+		match();
+	})
+	$("#grok-form").submit(match);
+
+	var availableTags = #{@tags};
+
+	function split( val ) {
+	    return val.split( /}\s*/ );
+	}
+	function extractLast( term ) {
+	    return split( term ).pop();
+	}
+
+	$( "#tags" )
+	   	// don't navigate away from the field on tab when selecting an item
+	    .bind( "keydown", function( event ) {
+	        if ( event.keyCode === $.ui.keyCode.TAB &&
+	                $( this ).data( "autocomplete" ).menu.active ) {
+	            event.preventDefault();
+	        }
+	    })
+	    .autocomplete({
+	        minLength: 3,
+	        source: function( request, response ) {
+	            // delegate back to autocomplete, but extract the last term
+	            response( $.ui.autocomplete.filter(
+	                availableTags, extractLast( request.term ) ) );
+	        },
+	        focus: function() {
+	            // prevent value inserted on focus
+	            return false;
+	        },
+	        select: function( event, ui ) {
+	            var terms = split( this.value );
+	            // remove the current input
+	            terms.pop();
+	            // add the selected item
+	            terms.push( ui.item.value );
+	            // add placeholder to get the comma-and-space at the end
+	            terms.push( "" );
+	            this.value = terms.join( "}" );
+	            return false;
+	        }
+	    })

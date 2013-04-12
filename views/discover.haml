@@ -1,0 +1,34 @@
+.container
+	.content
+		.wrapper
+			.proper-content
+				.control-group
+					.controls
+						%form{ :action => "#", :class => "form-horizontal", :id => "grok-form"}
+							%textarea{ :id => "input", :rows => "5", :action => "#", :class => "span9" }
+							%button{ :type => "submit", :class => "btn btn-primary"}
+								Discover
+							%button{ :class => "btn btn-danger", :type => "button", :id => "resetall" }
+								Reset
+				.well-large
+					%pre{ :class => "span9", :id => "grok"}
+			.push
+		.footer-wrapper
+			%footer
+				%div=haml :footer
+
+%script{ :type => "text/javascript", :src =>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"}
+%script{ :type => "text/javascript", :src => "http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js" }
+:javascript
+	var match = function() {
+		var input = $('#input').val();
+		$.post('/discover?#', {"input":input}, function(data){
+			$('#grok').text(data);
+		});
+	return 1;
+	};
+	$("#grok-form").submit(match);
+	$("#resetall").click(function () {
+		$("#input").val("");
+		$("#grok").text("");
+	});

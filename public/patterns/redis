@@ -1,0 +1,2 @@
+REDIS_TS %{MONTHDAY} %{MONTH} %{HOUR}:%{MINUTE}:%{SECOND}
+REDIS \[%{POSINT:pid}\] %{REDIS_TS:timestamp} \* %{GREEDYDATA:message}
