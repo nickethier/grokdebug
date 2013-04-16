@@ -1,0 +1,27 @@
+.container-fluid
+	.content
+		.wrapper
+			.proper-content
+				.row-fluid
+					.span2
+						.well.sidebar-nav
+							%ul.nav.nav-list
+								- @arr.each do |page|
+									%li
+										%a{:href => "#", :class => page}
+											= page
+					.span9
+						.row-fluid
+							%pre{:id => "pattern"}
+								Click any pattern to see its contents.
+			.push
+		.footer-wrapper
+			%footer
+				%div=haml :footer
+%script{ :type => "text/javascript", :src =>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"}
+:javascript
+	$("a").click(function () {
+		$.get('patterns/' + $(this).attr("class"), function(data){
+		$('#pattern').text(data);
+		});
+	});

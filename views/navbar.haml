@@ -1,0 +1,17 @@
+.navbar.navbar-fixed-top.navbar-inverse
+	.navbar-inner
+		.container
+			%a.btn.btn-navbar{ "data-toggle".to_sym => "collapse", "data-target".to_sym => ".nav-collapse"}
+				%span.icon-bar
+				%span.icon-bar
+				%span.icon-bar
+			%a.brand{:href => '/'} Grok Debugger
+			.nav-collapse
+				%ul.nav
+					%li{:class => ('active' if request.path_info == '/')}
+						%a{:href => '/'}Debugger
+					%li{:class => ('active' if request.path_info == '/discover')}
+						%a{:href => '/discover?#'} Discover
+					%li{:class => ('active' if request.path_info == '/patterns')}
+						%a{:href => '/patterns'} Patterns
+				%p.navbar-text.pull-right

@@ -3,4 +3,7 @@ source :rubygems
 gem 'jls-grok'
 gem 'sinatra'
 gem 'json'
-gem 'newrelic_rpm'
+gem 'haml'
+group :development do
+	gem 'shotgun'
+end
