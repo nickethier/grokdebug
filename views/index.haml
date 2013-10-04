@@ -2,10 +2,13 @@
 	.content
 		.wrapper
 			.proper-content				
-				%form{ :action => "#", :id => "grok-form" }
+				%form{ :action => "#", :id => "grok-form" }						
 					%input{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
 					.ui-widget
 						%input{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "tags" }
+					%lable{ :class => "checkbox inline",}
+						%input{ :id => "add_custom_patterns", :type => "checkbox", :value= => "" }
+							Add custom patterns
 					%lable{ :class => "checkbox inline",}
 						%input{ :id => "keep_empty_captures", :type => "checkbox", :value= => "" }
 							Keep Empty Captures
@@ -18,6 +21,10 @@
 					%label{ :class => "checkbox inline pull-right" }
 						%input{ :id => "autocomplete", :type => "checkbox", :value => "" }
 							Autocomplete
+				%div{:id => "custom_patterns_container", :style=>"display:none;"}
+					%p
+						One per line, the syntax for a grok pattern is <code>%{SYNTAX:SEMANTIC}</code>
+					%textarea{ :class => "span12", :placeholder => "Custom patterns", :id => "custom_patterns", }									
 				%div{ :class => "well" }
 					%pre{ :id => "grok" }
 			.push
@@ -30,6 +37,7 @@
 %script{ :type => "text/javascript", :src => "//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" }
 :javascript
 	var match = function() {
+		var custom_patterns = $('#custom_patterns').val();		
 		var input = $('#input').val();
 		var pattern = $('#tags').val();
 		var named_captures_only = $('#named_captures_only').is(':checked');
@@ -38,6 +46,7 @@
 		
 		$.post('/grok',
 			{
+			    "custom_patterns":custom_patterns,
 				"input":input,
 				"pattern":pattern,
 				"named_captures_only":named_captures_only,
@@ -60,6 +69,11 @@
 			match();
 		}
 	}, 1000);
+	$("#add_custom_patterns").click(function(){
+		$( "#custom_patterns_container" ).toggle(function() {
+			$( "#custom_patterns" ).val("")
+		})
+	})
 	$("#named_captures_only").click(function(){
 		 match();
 	})
@@ -75,7 +89,7 @@
 	});
 	$("#grok-form").submit(match);
 
-	var availableTags = #{@tags};
+	var availableTags = #{@tags};	
 
 	function split( val ) {
 	    return val.split( /}\s*/ );
@@ -96,6 +110,14 @@
 	        minLength: 3,
 	        disabled: true,
 	        source: function( request, response ) {
+	        	$.each($( "#custom_patterns" ).val().split('\n'), function(){
+					var line_splitted = this.replace(/^\s*/, "").split(/\s+/)
+					var name = line_splitted[0]
+					if ( $.inArray(name, availableTags) == -1 ) {
+						availableTags.push("%{" + name)
+					}
+				});
+
 	            // delegate back to autocomplete, but extract the last term
 	            response( $.ui.autocomplete.filter(
 	                availableTags, extractLast( request.term ) ) );
