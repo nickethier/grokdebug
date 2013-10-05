@@ -62,7 +62,7 @@ class Application < Sinatra::Base
     end 
     
     begin
-      grok.compile(params[:pattern])          
+      grok.compile(params[:pattern])
     rescue 
       return "Compile ERROR"
     end
@@ -121,20 +121,13 @@ class Application < Sinatra::Base
   end
 
   post '/discover' do
-    custom_patterns = params[:custom_patterns]    
-    if !custom_patterns.empty?
-      add_custom_patterns_from_string(custom_patterns)
-    end 
-    
-    discovered = grok.discover(params[:input])
-    print "#{discovered}"
-    discovered
+    grok.discover(params[:input])
   end
   
   get '/' do
     @tags = []
     grok.patterns.each do |x,y|
-        @tags << "%{#{x}"        
+        @tags << "%{#{x}"
     end
     haml :'index'
   end

@@ -2,7 +2,7 @@
 	.content
 		.wrapper
 			.proper-content				
-				%form{ :action => "#", :id => "grok-form" }						
+				%form{ :action => "#", :id => "grok-form" }
 					%input{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
 					.ui-widget
 						%input{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "tags" }
@@ -89,7 +89,7 @@
 	});
 	$("#grok-form").submit(match);
 
-	var availableTags = #{@tags};	
+	var availableTags = #{@tags};
 
 	function split( val ) {
 	    return val.split( /}\s*/ );
