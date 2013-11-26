@@ -2,6 +2,7 @@ require 'sinatra'
 require 'grok-pure'
 require 'json'
 require 'find'
+require 'cgi'
 
 class Application < Sinatra::Base
   
@@ -95,8 +96,21 @@ class Application < Sinatra::Base
     end
 
     if fields
+      #Keep escaped strings before generating json in escaped_fields dict
+      escaped_fields = {}
+      fields.each do |key, value|
+        if singles
+          value.map! { |x| CGI.escapeHTML(x) if x != nil }
+        else
+          value.each_index do |i|
+            value[i].map! { |x| CGI.escapeHTML(x) if x != nil}
+          end
+        end
+        escaped_fields[CGI.escapeHTML(key)] = value
+      end
+
     #pp match.captures
-      return JSON.pretty_generate(fields)
+      return JSON.pretty_generate(escaped_fields)
     end
 
     return "No Matches"
