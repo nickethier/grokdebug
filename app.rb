@@ -35,15 +35,33 @@ class Application < Sinatra::Base
     end
   end
 
+  def add_custom_patterns_from_string(text)
+    text.each_line do |line|
+      # Skip comments
+      next if line =~ /^\s*#/ 
+      # File format is: NAME ' '+ PATTERN '\n'
+      name, pattern = line.gsub(/^\s*/, "").split(/\s+/, 2)
+      #p name => pattern
+      # If the line is malformed, skip it.
+      next if pattern.nil?
+      # Trim newline and add the pattern.
+      grok.add_pattern(name, pattern.chomp)
+      end
+  end
+
   set :public_folder, File.dirname(__FILE__) + '/public'
   post '/grok' do
-
+    custom_patterns = params[:custom_patterns]    
     input = params[:input]
     pattern = params[:pattern]
     named_captures_only = (params[:named_captures_only] == "true")
     singles = (params[:singles] == "true")
     keep_empty_captures = (params[:keep_empty_captures] == "true")
-
+    
+    if !custom_patterns.empty?
+      add_custom_patterns_from_string(custom_patterns)
+    end 
+    
     begin
       grok.compile(params[:pattern])
     rescue 
