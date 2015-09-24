@@ -3,9 +3,9 @@
 		.wrapper
 			.proper-content				
 				%form{ :action => "#", :id => "grok-form" }
-					%input{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
+					%textarea{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
 					.ui-widget
-						%input{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "tags" }
+						%textarea{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "tags" }
 					%label{ :class => "checkbox inline",}
 						%input{ :id => "add_custom_patterns", :type => "checkbox", :value= => "" }
 							Add custom patterns
