@@ -3,9 +3,9 @@
 		.wrapper
 			.proper-content
 				%form{ :action => "#", :id => "grok-form" }
-					%textarea{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
+					%textarea{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input", :rows => "5" }
 					.ui-widget
-						%textarea{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "tags" }
+						%textarea{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "tags", :rows => "5" }
 					%label{ :for => "add_custom_patterns", :class => "checkbox inline",}
 						%input{ :id => "add_custom_patterns", :type => "checkbox", :value= => "" }
 							Add custom patterns
@@ -27,7 +27,7 @@
 				%div{:id => "custom_patterns_container", :style=>"display:none;"}
 					%p
 						One per line, the syntax for a grok pattern is <code>%{SYNTAX:SEMANTIC}</code>
-					%textarea{ :class => "span12", :placeholder => "Custom patterns", :id => "custom_patterns", }
+					%textarea{ :class => "span12", :placeholder => "Custom patterns", :id => "custom_patterns", :rows => "5" }
 				%div{ :class => "well" }
 					%pre{ :id => "grok" }
 			.push
@@ -39,15 +39,52 @@
 %script{ :type => "text/javascript", :src => "//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js" }
 %script{ :type => "text/javascript", :src => "//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" }
 :javascript
+	// function to load settings from localstorage
+	var loadLocalstorage = function() {
+		$('#input').val(localStorage.getItem('input'));
+		$('#tags').val(localStorage.getItem('pattern'));
+		$('#add_custom_patterns').prop('checked', parseInt(localStorage.getItem('add_custom_patterns')));
+		$('#named_captures_only').prop('checked', parseInt(localStorage.getItem('named_captures_only')));
+		$('#keep_empty_captures').prop('checked', parseInt(localStorage.getItem('keep_empty_captures')));
+		$('#singles').prop('checked', parseInt(localStorage.getItem('singles')));
+		$('#autocomplete').prop('checked', parseInt(localStorage.getItem('autocomplete')));
+
+		// show custom pattern window and fill valueif needed
+		if ($('#add_custom_patterns').is(':checked')) {
+			$('#custom_patterns').val(localStorage.getItem('custom_patterns'));
+			$('#custom_patterns_container').show();
+		}
+	};
+	// function to save settings to localstorage
+	var saveLocalstorage = function(custom_patterns, input, pattern, add_custom_patterns, named_captures_only, keep_empty_captures, singles, autocomplete) {
+		localStorage.setItem('custom_patterns', custom_patterns);
+		localStorage.setItem('input', input);
+		localStorage.setItem('pattern', pattern);
+		localStorage.setItem('add_custom_patterns', (add_custom_patterns == true ? 1 : 0));
+		localStorage.setItem('named_captures_only', (named_captures_only == true ? 1 : 0));
+		localStorage.setItem('keep_empty_captures', (keep_empty_captures == true ? 1 : 0));
+		localStorage.setItem('singles', (singles == true ? 1 : 0));
+		localStorage.setItem('autocomplete', (autocomplete == true ? 1 : 0));
+	};
+
+	// function to execute AJAX matching
 	var match = function() {
 		var custom_patterns = $('#custom_patterns').val();
 		var input = $('#input').val();
 		var pattern = $('#tags').val();
+		var add_custom_patterns = $('#add_custom_patterns').is(':checked');
 		var named_captures_only = $('#named_captures_only').is(':checked');
 		var keep_empty_captures = $('#keep_empty_captures').is(':checked');
 		var singles = $('#singles').is(':checked');
+		var autocomplete = $('#autocomplete').is(':checked');
 
+		// Save the user's settings to localstorage for next time
+		saveLocalstorage(custom_patterns, input, pattern, add_custom_patterns, named_captures_only, keep_empty_captures, singles, autocomplete);
+
+		// Display a loading indicator
 		$('#grok').parent().prepend("<i id='grokSpinner' class='icon icon-refresh icon-spin pull-right'></i>");
+
+		// Get the results from Grok
 		$.post('/grok',
 			{
 				"custom_patterns":custom_patterns,
@@ -57,11 +94,22 @@
 				"keep_empty_captures":keep_empty_captures,
 				"singles":singles
 			}, function(data){
+				// Display the results to the user
 				$('#grok').html(data);
+
+				// Remove the loading indicator after a short time
 				setTimeout(function(){$('#grokSpinner').remove();}, 500);
 			}
 		);
 	};
+
+	// load settings from localstorage
+	loadLocalstorage();
+
+	// go ahead and match just in case we have something already
+	match();
+
+	// call match() if pattern, input, or custom patterns change
 	var oldPat = $("#tags").val();
 	var oldIn = $("#input").val();
 	var oldCust = $("#custom_patterns").val();
@@ -78,11 +126,8 @@
 			match();
 		}
 	}, 1000);
-	$("#add_custom_patterns").click(function(){
-		$( "#custom_patterns_container" ).toggle(function() {
-			$( "#custom_patterns" ).val("")
-		})
-	})
+
+	// also match if various buttons are clicked
 	$("#named_captures_only").click(function(){
 		match();
 	})
@@ -92,13 +137,23 @@
 	$("#singles").click(function(){
 		match();
 	})
-	$("#autocomplete").click(function(){
-		var autocomplete = $('#autocomplete').is(':checked');
-		$( "#tags" ).autocomplete({ disabled: !autocomplete });
-	});
 	$("#grok-form").submit(function(){
 		match();
 		return false;
+	});
+
+	// show/hide custom patterns container, and remove patterns
+	$("#add_custom_patterns").click(function(){
+		$( "#custom_patterns_container" ).toggle(function() {
+			$( "#custom_patterns" ).val("")
+		})
+	})
+
+
+	// autocomplete functionality
+	$("#autocomplete").click(function(){
+		var autocomplete = $('#autocomplete').is(':checked');
+		$( "#tags" ).autocomplete({ disabled: !autocomplete });
 	});
 
 	var availableTags = #{@tags};
