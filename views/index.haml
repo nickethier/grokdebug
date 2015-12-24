@@ -6,21 +6,24 @@
 					%textarea{ :type => "text", :class => "span12", :placeholder => "Input", :id => "input" }
 					.ui-widget
 						%textarea{ :type => "text", :class => "span12", :placeholder => "Pattern", :id => "tags" }
-					%label{ :class => "checkbox inline",}
+					%label{ :for => "add_custom_patterns", :class => "checkbox inline",}
 						%input{ :id => "add_custom_patterns", :type => "checkbox", :value= => "" }
 							Add custom patterns
-					%label{ :class => "checkbox inline",}
+					%label{ :for => "keep_empty_captures", :class => "checkbox inline",}
 						%input{ :id => "keep_empty_captures", :type => "checkbox", :value= => "" }
 							Keep Empty Captures
-					%label{ :class => "checkbox inline" }
+					%label{ :for => "named_captures_only", :class => "checkbox inline" }
 						%input{ :id => "named_captures_only", :type => "checkbox", :value => "" }
 							Named Captures Only
-					%label{ :class => "checkbox inline" }
+					%label{ :for => "singles", :class => "checkbox inline" }
 						%input{ :id => "singles", :type => "checkbox", :value => "" }
 							Singles
-					%label{ :class => "checkbox inline pull-right" }
-						%input{ :id => "autocomplete", :type => "checkbox", :value => "" }
-							Autocomplete
+					%span{ :class => "pull-right" }
+						%label{ :for => "autocomplete", :class => "checkbox inline" }
+							%input{ :id => "autocomplete", :type => "checkbox", :value => "" }
+								Autocomplete
+						&nbsp;
+						%input{ :type => "submit", :class => "inline btn btn-primary", :value => "Go"}
 				%div{:id => "custom_patterns_container", :style=>"display:none;"}
 					%p
 						One per line, the syntax for a grok pattern is <code>%{SYNTAX:SEMANTIC}</code>
@@ -44,6 +47,7 @@
 		var keep_empty_captures = $('#keep_empty_captures').is(':checked');
 		var singles = $('#singles').is(':checked');
 
+		$('#grok').parent().prepend("<i id='grokSpinner' class='icon icon-refresh icon-spin pull-right'></i>");
 		$.post('/grok',
 			{
 				"custom_patterns":custom_patterns,
@@ -53,19 +57,24 @@
 				"keep_empty_captures":keep_empty_captures,
 				"singles":singles
 			}, function(data){
-			$('#grok').html(data);
-		});
+				$('#grok').html(data);
+				setTimeout(function(){$('#grokSpinner').remove();}, 500);
+			}
+		);
 	};
 	var oldPat = $("#tags").val();
 	var oldIn = $("#input").val();
+	var oldCust = $("#custom_patterns").val();
 	setInterval(function (){
 		pat = $("#tags").val();
 		inp = $("#input").val();
-		if(inp == oldIn && pat == oldPat){
+		cust = $("#custom_patterns").val();
+		if(inp == oldIn && pat == oldPat && cust == oldCust){
 			return;
 		} else {
 			oldPat = pat;
 			oldIn = inp;
+			oldCust = cust;
 			match();
 		}
 	}, 1000);
@@ -87,7 +96,10 @@
 		var autocomplete = $('#autocomplete').is(':checked');
 		$( "#tags" ).autocomplete({ disabled: !autocomplete });
 	});
-	$("#grok-form").submit(match);
+	$("#grok-form").submit(function(){
+		match();
+		return false;
+	});
 
 	var availableTags = #{@tags};
 

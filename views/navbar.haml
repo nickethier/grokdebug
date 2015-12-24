@@ -11,7 +11,7 @@
 					%li{:class => ('active' if request.path_info == '/')}
 						%a{:href => '/'}Debugger
 					%li{:class => ('active' if request.path_info == '/discover')}
-						%a{:href => '/discover?#'} Discover
+						%a{:href => '/discover?#', :target => '_blank'} Discover
 					%li{:class => ('active' if request.path_info == '/patterns')}
-						%a{:href => '/patterns'} Patterns
+						%a{:href => '/patterns', :target => '_blank'} Patterns
 				%p.navbar-text.pull-right
