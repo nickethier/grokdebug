@@ -5,13 +5,15 @@
 				.control-group
 					.controls
 						%form{ :action => "#", :class => "form-horizontal", :id => "grok-form"}
-							%textarea{ :id => "input", :rows => "5", :action => "#", :class => "span9" }
-							%button{ :type => "submit", :class => "btn btn-primary"}
-								Discover
-							%button{ :class => "btn btn-danger", :type => "button", :id => "resetall" }
-								Reset
-				.well-large
-					%pre{ :class => "span9", :id => "grok"}
+							%textarea{ :id => "input", :rows => "5", :action => "#", :class => "span12" }
+							%br &nbsp;
+							.text-right
+								%button{ :type => "submit", :class => "btn btn-primary"}
+									Discover
+								%button{ :class => "btn btn-danger", :type => "button", :id => "resetall" }
+									Reset
+				.well
+					%pre{ :id => "grok"}
 			.push
 		.footer-wrapper
 			%footer
