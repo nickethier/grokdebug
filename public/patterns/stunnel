@@ -1,0 +1,8 @@
+# stunnel date format
+STUNNEL_DATE %{YEAR}.%{MONTHNUM2}.%{MONTHDAY} %{TIME}
+
+#stunnel log level
+STUNNEL_LOG_LEVEL LOG%{NUMBER}
+
+# stunnel log line
+STUNNEL %{STUNNEL_DATE:stunnel_date} %{STUNNEL_LOG_LEVEL:stunnel_log_level}\[%{POSINT:stunnel_pid}:%{POSINT:stunnel_thread_id}\]: %{GREEDYDATA:stunnel_log_message}
