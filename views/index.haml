@@ -26,7 +26,7 @@
 						%input{ :type => "submit", :class => "inline btn btn-primary", :value => "Go"}
 				%div{:id => "custom_patterns_container", :style=>"display:none;"}
 					%p
-						One per line, the syntax for a grok pattern is <code>%{SYNTAX:SEMANTIC}</code>
+						 On each line you give a pattern name, a space and the pattern. For example: <code>WORD \b\w+\b</code>
 					%textarea{ :class => "span12", :placeholder => "Custom patterns", :id => "custom_patterns", :rows => "5" }
 				%div{ :class => "well" }
 					%pre{ :id => "grok" }
